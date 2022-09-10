@@ -1,15 +1,27 @@
-
 def print_board(dim, board):
-    print ("CURRENT BOARD POSITION")
+    print ("CURRENT BOARD")
     print ("-------------")
 
     for row in range(dim): # Each row
         for col in range(dim):
             print (f" {board[row * dim + col]} ", end="")
         print()
+def get_next_user_move():
+    a_move = input()
+    move_arr = a_move.split(":")
+    character = move_arr[0]
+    direction = move_arr[1]
+    return character, direction
+
+def board_move(board, dim, player_name, character, direction):
+    old_index = board.index(player_name + "-"+ character)
+    new_index = apply_direction(dim, player_name, old_index, direction)
+    #print(old_index, " ", new_index)
+    if new_index != old_index:
+        board[new_index] = board[old_index] # Move to the new slot
+        board[old_index] = '    ' # Empty the current slot
 
 def apply_direction( dim, player_name, old_index, move):
-    print (f' dim = {dim} player_name = {player_name}  old_index = {old_index},  move = {move}')
     new_index = old_index
     if player_name == "A":
         if move =="L":
@@ -39,11 +51,9 @@ def apply_direction( dim, player_name, old_index, move):
                 new_index = old_index - dim
     return new_index
 
-
-
-
+print ( "Enter the dimention of the board. if you have 5x5 board, please enter only 5")
 dim = int(input())
-board = ['    '] *dim *dim
+board = ['    '] *  dim *  dim
 
 print ( "Player A: Select characters ( Ex: P3, P2, P5, P4, P1)")
 player_A = list(map(str, input().split(", ")))
@@ -64,27 +74,13 @@ print (player_B_pos)
 print_board (dim, board)
 while(True):
     print ("Player A’s Move: Ex: P1:F ")
-    a_move = input()
-    move_arr = a_move.split(":")
-    character = move_arr[0]
-    direction = move_arr[1]
-    # Get the current index  of "A-"+ character
-    old_index = board.index("A-"+ character)
-    new_index = apply_direction(dim, "A", old_index, direction)
-    print (old_index, " ", new_index)
-    board[new_index] = board[old_index]
-    board[old_index] = '    '
+    player_name = "A"
+    character, direction =  get_next_user_move ()
+    board_move(board, dim, player_name, character, direction)
     print_board (dim, board)
 
     print ("Player B’s Move: Ex: P4:F ")
-    b_move = input()
-    move_arr = b_move.split(":")
-    character = move_arr[0]
-    direction = move_arr[1]
-    # Get the current index  of "A-"+ character
-    old_index = board.index("B-"+ character)
-    new_index = apply_direction(dim, "B", old_index, direction)
-    print (old_index, " ", new_index)
-    board[new_index] = board[old_index]
-    board[old_index] = '    '
+    player_name = "B"
+    character, direction =  get_next_user_move ()
+    board_move(board, dim, player_name, character, direction)
     print_board (dim, board)
